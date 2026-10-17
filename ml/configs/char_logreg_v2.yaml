@@ -1,0 +1,6 @@
+experiment: sms-improved
+run_name: char-logreg-v2
+data_version: v2
+model: char_logreg
+C: 10
+register_as: sms-spam-model

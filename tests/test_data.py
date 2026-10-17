@@ -8,11 +8,11 @@ def test_clean_text_lowercase():
 
 
 def test_clean_text_spaces_tabs_newlines():
-    assert clean_text("hello \t there\n\nfriend ") == "hello there friend"
+    assert clean_text("  hello \t there\n\nfriend  ") == "hello there friend"
 
 
 def test_clean_text_only_spaces():
-    assert clean_text(" ") == ""
+    assert clean_text("   ") == ""
 
 
 def test_load_raw_with_quotes(tmp_path):
@@ -35,12 +35,12 @@ def test_v2_removes_exact_duplicates():
 
 
 def test_v2_removes_duplicates_that_differ_only_in_case_or_spaces():
-    df = pd.DataFrame({"label": ["spam", "spam"], "text": ["WIN now", "win now"]})
+    df = pd.DataFrame({"label": ["spam", "spam"], "text": ["WIN  now", "win now "]})
     assert len(make_v2(df)) == 1
 
 
 def test_v2_removes_blank_messages():
-    df = pd.DataFrame({"label": ["ham", "ham"], "text": ["", "ok"]})
+    df = pd.DataFrame({"label": ["ham", "ham"], "text": ["   ", "ok"]})
     result = make_v2(df)
     assert list(result["text"]) == ["ok"]
 

@@ -1,0 +1,5 @@
+experiment: sms-baseline
+run_name: nb-v1
+data_version: v1
+model: naive_bayes
+alpha: 1.0

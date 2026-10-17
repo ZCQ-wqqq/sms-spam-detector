@@ -1,0 +1,17 @@
+.git
+.github
+.venv
+.dvc
+.env
+data
+ml
+tests
+notebooks
+mlruns
+mlflow.db
+__pycache__
+.pytest_cache
+.ruff_cache
+*.md
+requirements-dev.txt
+requirements-ml.txt

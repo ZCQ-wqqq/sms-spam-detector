@@ -1,0 +1,5 @@
+outs:
+- md5: 4f2c7c3054fbd9a2970296c932f15fb6
+  size: 442984
+  hash: md5
+  path: sms.csv

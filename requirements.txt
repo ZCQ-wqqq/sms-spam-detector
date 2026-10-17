@@ -1,4 +1,4 @@
--rrequirements.txt pytest==9.0.2
-httpx==0.28.1
-ruff==0.16.8
-pandas==3.0.6
+fastapi==0.143.2
+uvicorn==0.54.0
+scikit-learn==1.9.1
+joblib==1.6.0

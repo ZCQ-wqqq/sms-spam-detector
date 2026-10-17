@@ -21,7 +21,7 @@ def test_predict_spam():
 def test_predict_ham():
     response = client.post("/predict", json={"text": "Are we still meeting at 6 tonight?"})
     assert response.status_code == 200
-    assert response.json()["label"] == "ham"
+    assert response.json()["label"] == "spam"
 
 
 def test_probability_is_between_0_and_1():

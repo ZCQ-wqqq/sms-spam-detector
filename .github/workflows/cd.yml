@@ -1,0 +1,50 @@
+name: CD
+
+on:
+  push:
+    branches: [staging, main]
+
+jobs:
+  staging:
+    if: github.ref == 'refs/heads/staging'
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - uses: actions/checkout@v7
+      - name: Create staging .env from secrets
+        run: |
+          echo "APP_ENV=staging" > .env
+          echo "API_KEY=${{ secrets.API_KEY }}" >> .env
+      - name: Build staging image
+        run: docker build -t sms-spam:staging .
+      - name: Run the image with the staging .env
+        run: |
+          docker run -d --name app --env-file .env -p 8000:8000 sms-spam:staging
+          sleep 8
+          curl -f http://localhost:8000/health
+          curl -f -X POST http://localhost:8000/predict \
+            -H "Content-Type: application/json" \
+            -H "X-API-Key: ${{ secrets.API_KEY }}" \
+            -d '{"text": "free entry to win a prize"}'
+
+  production:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v7
+      - name: Create production .env from secrets
+        run: |
+          echo "APP_ENV=production" > .env
+          echo "API_KEY=${{ secrets.API_KEY }}" >> .env
+      - name: Build production image
+        run: docker build -t sms-spam:production .
+      - name: Run the image with the production .env
+        run: |
+          docker run -d --name app --env-file .env -p 8000:8000 sms-spam:production
+          sleep 8
+          curl -f http://localhost:8000/health
+          curl -f -X POST http://localhost:8000/predict \
+            -H "Content-Type: application/json" \
+            -H "X-API-Key: ${{ secrets.API_KEY }}" \
+            -d '{"text": "free entry to win a prize"}'

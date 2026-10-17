@@ -1,0 +1,4 @@
+-rrequirements.txt pytest==9.0.2
+httpx==0.28.1
+ruff==0.16.8
+pandas==3.0.6

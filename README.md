@@ -77,3 +77,9 @@ must pass before merging.
 More details about the secrets in [DEPLOYMENT.md](DEPLOYMENT.md).
 The data and the experiments are explained in [ml/README_data.md](ml/README_data.md) and
 [ml/README_experiments.md](ml/README_experiments.md).
+
+## Maintained by
+
+- Zhang Jingyi — app & tests
+- Zhao Tong — data pipeline & model training
+- Zhang Chaoqian — docker, CI/CD & deployment

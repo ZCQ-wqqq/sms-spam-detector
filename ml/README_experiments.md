@@ -41,3 +41,35 @@ Same split for all runs: 80% train / 20% test, stratified, `random_state=42`.
 We use **char-logreg-v2** because it has the best F1 on the same data as the baseline
 (v2), with higher precision and recall. It is registered in MLflow as `sms-spam-model`
 and exported to `app/model/`. See [registry/current_model.md](registry/current_model.md).
+
+## Reproduce these runs on another machine
+
+`mlflow.db` is in `.gitignore`, so a fresh clone has no run history. Rebuild it by
+running the three configs again. The split is fixed (`random_state=42`) and the data is
+pinned by DVC, so the metrics come out identical; only the run ids differ.
+
+```bash
+git checkout data-v1 -- data/sms.csv.dvc
+dvc pull data/sms.csv
+python ml/train.py --config ml/configs/nb_v1.yaml
+
+git checkout HEAD -- data/sms.csv.dvc
+dvc pull data/sms.csv
+python ml/train.py --config ml/configs/nb_v2.yaml
+python ml/train.py --config ml/configs/char_logreg_v2.yaml
+```
+
+Do **not** add `--export` when rebuilding for a demo: that would overwrite
+`app/model/model.joblib`, the file the app ships with.
+
+## How CI checks this code
+
+`tests/test_data.py` imports `clean_text`, `load_raw`, `make_v1` and `make_v2` from
+`ml/data_pipeline.py` (9 tests). `tests/test_model.py` loads `app/model/model.joblib` and
+calls `predict` and `predict_proba` on it (6 tests). CI runs `ruff check .`,
+`ruff format --check .` and `pytest -v` on every pull request, so a change to the
+pipeline or to the exported model that breaks these tests cannot be merged.
+
+The CD workflow goes one step further: after a merge into `staging` or `main` it starts
+the container and calls `POST /predict`, which loads the same `model.joblib` inside the
+image.
